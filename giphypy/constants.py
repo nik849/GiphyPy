@@ -1,1 +1,1 @@
-api_url = 'https://api.giphy.com/v1/gifs/'
+API_URL = 'https://api.giphy.com/v1/gifs/'
