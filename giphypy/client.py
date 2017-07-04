@@ -1,9 +1,10 @@
-from .constants import api_url
-from .errors import GiphyPyKeyError, GiphyPyError
 import requests
 
+from .constants import API_URL
+from .errors import GiphyPyError, GiphyPyKeyError
 
-class giphy_api:
+
+class Giphy:
     """
     Wrapper for the Giphy api. Keys can be optained from:
     https://developers.giphy.com
@@ -16,17 +17,17 @@ class giphy_api:
             raise GiphyPyKeyError
         self.api_key = api_key
 
-    async def _get(self, api_endpoint: str, **args):
+    async def _get(self, api_endpoint: str, **kwargs):
         """
         Wrapper for fetching data from Giphy
         :param api_endpoint: Giphy API endpoint, usually search or translate.
         """
-        args['api_key'] = self.api_key
-        req_str = api_url + '/' + api_endpoint
-        data = await requests.get(req_str, params=args)
+        kwargs.setdefault('params', {})['api_key'] = self.api_key
+        req_str = API_URL + '/' + api_endpoint
+        data = await requests.get(req_str, params=kwargs)
         return data
 
-    async def gif_search(self, q, limit=None, offset=None, rating=None, lang=None):
+    async def search(self, q, limit=None, offset=None, rating=None, lang=None):
         """
         Main search method for Giphy's search endpoint
         :param q: search term, Required
@@ -45,12 +46,12 @@ class giphy_api:
         if lang:
             params.update({'lang': lang})
 
-        data =  await self._get('search', params)
+        data = await self._get('search', params)
         if data['meta']['status'] != 200:
             raise GiphyPyError(str(data['meta']['msg']))
         return data
 
-    async def gif_translate(self):
+    async def translate(self):
         """
         Method for Giphy's translate endpoint
         """
