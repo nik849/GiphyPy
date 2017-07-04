@@ -26,7 +26,7 @@ class giphy_api:
         data = await requests.get(req_str, params=args)
         return data
 
-    def gif_search(self, q, limit=None, offset=None, rating=None, lang=None):
+    async def gif_search(self, q, limit=None, offset=None, rating=None, lang=None):
         """
         Main search method for Giphy's search endpoint
         :param q: search term, Required
@@ -45,12 +45,12 @@ class giphy_api:
         if lang:
             params.update({'lang': lang})
 
-        data = self._get('search', params)
+        data =  await self._get('search', params)
         if data['meta']['status'] != 200:
             raise GiphyPyError(str(data['meta']['msg']))
         return data
 
-    def gif_translate(self):
+    async def gif_translate(self):
         """
         Method for Giphy's translate endpoint
         """
