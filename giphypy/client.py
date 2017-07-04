@@ -1,6 +1,5 @@
 from .constants import api_url
 from .errors import GiphyPyKeyError, GiphyPyError
-import asyncio
 import requests
 
 
@@ -26,12 +25,30 @@ class giphy_api:
         req_str = api_url + '/' + api_endpoint
         data = await requests.get(req_str, params=args)
         return data
-# Working on
-    def gif_search(self):
+
+    def gif_search(self, q, limit=None, offset=None, rating=None, lang=None):
         """
         Main search method for Giphy's search endpoint
+        :param q: search term, Required
+        :param limit: search result limit, not Required
+        :param offset: search result offset
+        :param rating: search result age rating (Y, G, PG, PG-13, R)
+        :param lang: language, default=en
         """
-        pass
+        params = {'q': q}
+        if limit:
+            params.update({'limit': limit})
+        if rating:
+            params.update({'rating': rating})
+        if offset:
+            params.update({'offset': offset})
+        if lang:
+            params.update({'lang': lang})
+
+        data = self._get('search', params)
+        if data['meta']['status'] != 200:
+            raise GiphyPyError(str(data['meta']['msg']))
+        return data
 
     def gif_translate(self):
         """
