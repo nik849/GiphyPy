@@ -1,8 +1,10 @@
 import asyncio
+from typing import Optional
+
 import requests
+
 import aiohttp
 
-from typing import Optional
 
 from .constants import API_URL
 from .errors import GiphyPyError, GiphyPyKeyError
