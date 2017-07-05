@@ -5,7 +5,6 @@ import requests
 
 import aiohttp
 
-
 from .constants import API_URL
 from .errors import GiphyPyError, GiphyPyKeyError
 
