@@ -13,7 +13,7 @@ class Giphy:
     https://developers.giphy.com
     """
     def __init__(self, api_key, loop: Optional[asyncio.BaseEventLoop] = None,
-        session: aiohttp.ClientSession = None):
+                 session: aiohttp.ClientSession = None):
         """
         :param api_key: Giphy API key, required.
         """
@@ -23,7 +23,6 @@ class Giphy:
         self.api_key = api_key
         self.loop = loop or asyncio.get_event_loop()
         self.session = session or aiohttp.ClientSession(loop=self.loop)
-
 
     async def _get(self, api_endpoint: str, **kwargs):
         """
