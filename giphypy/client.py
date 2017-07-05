@@ -1,4 +1,7 @@
 import requests
+import asyncio
+import aiohttp
+from typing import Optional
 
 from .constants import API_URL
 from .errors import GiphyPyError, GiphyPyKeyError
@@ -9,13 +12,18 @@ class Giphy:
     Wrapper for the Giphy api. Keys can be optained from:
     https://developers.giphy.com
     """
-    def __init__(self, api_key):
+    def __init__(self, api_key, loop: Optional[asyncio.BaseEventLoop] = None,
+        session: aiohttp.ClientSession = None):
         """
         :param api_key: Giphy API key, required.
         """
         if not api_key:
             raise GiphyPyKeyError
+
         self.api_key = api_key
+        self.loop = loop or asyncio.get_event_loop()
+        self.session = session or aiohttp.ClientSession(loop=self.loop)
+
 
     async def _get(self, api_endpoint: str, **kwargs):
         """
