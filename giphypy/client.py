@@ -1,8 +1,6 @@
 import asyncio
 from typing import Optional
 
-import requests
-
 import aiohttp
 
 from .constants import API_URL
