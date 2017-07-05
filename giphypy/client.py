@@ -26,14 +26,17 @@ class Giphy:
         self.loop = loop or asyncio.get_event_loop()
         self.session = session or aiohttp.ClientSession(loop=self.loop)
 
-    async def _get(self, api_endpoint: str, **kwargs):
+    async def _get(self, api_endpoint, params):
         """
         Wrapper for fetching data from Giphy
         :param api_endpoint: Giphy API endpoint, usually search or translate.
         """
-        kwargs.setdefault('params', {})['api_key'] = self.api_key
-        req_str = API_URL + '/' + api_endpoint
-        data = await requests.get(req_str, params=kwargs)
+        params.update({'api_key': self.api_key})
+        req_str = API_URL + api_endpoint
+        print(req_str)
+        async with self.session.get(url=req_str, params=params) as resp:
+            data = await resp.json()
+            print(data)
         return data
 
     async def search(self, q, limit=None, offset=None, rating=None, lang=None):
@@ -55,8 +58,8 @@ class Giphy:
         if lang:
             params.update({'lang': lang})
 
-        data = await self._get('search', params)
-        if data['meta']['status'] != 200:
+        data = await self._get('search', params=params)
+        if data['meta']['status'] is not 200:
             raise GiphyPyError(str(data['meta']['msg']))
         return data
 
