@@ -1,4 +1,4 @@
-#GiphyPy
+# GiphyPy
 Python Wrapper for Giphy API
 
 Work in Progress...
