@@ -2,9 +2,12 @@ import asyncio
 from typing import Optional
 
 import aiohttp
+import logging
 
 from .constants import API_URL
 from .errors import GiphyPyError, GiphyPyKeyError
+
+logger = logging.getLogger(__name__)
 
 
 class Giphy:
@@ -31,10 +34,10 @@ class Giphy:
         """
         params.update({'api_key': self.api_key})
         req_str = API_URL + api_endpoint
-        print(req_str)
+        logger.debug(f'Request URL:{api_endpoint}')
         async with self.session.get(url=req_str, params=params) as resp:
+            logger.debug(f'Making Request to Giphy API with:{params}')
             data = await resp.json()
-            print(data)
         return data
 
     async def search(self, q, limit=None, offset=None, rating=None, lang=None):
@@ -61,8 +64,28 @@ class Giphy:
             raise GiphyPyError(str(data['meta']['msg']))
         return data
 
-    async def translate(self):
+    async def translate(self, s, limit=None, offset=None,
+                        rating=None, lang=None):
         """
-        Method for Giphy's translate endpoint
+        Search method for Giphy's translate endpoint
+        :param q: search term, or phrase, Required
+        :param limit: search result limit, not Required
+        :param offset: search result offset
+        :param rating: search result age rating (Y, G, PG, PG-13, R)
+        :param lang: language, default=en
         """
-        pass
+        params = {'s': s}
+        if limit:
+            params.update({'limit': limit})
+        if rating:
+            params.update({'rating': rating})
+        if offset:
+            params.update({'offset': offset})
+        if lang:
+            params.update({'lang': lang})
+
+        data = await self._get('translate', params=params)
+        logger.debug(f'Returned: {data["meta"]["status"]}')
+        if data['meta']['status'] is not 200:
+            raise GiphyPyError(str(data['meta']['msg']))
+        return data
