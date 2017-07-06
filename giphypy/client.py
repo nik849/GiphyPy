@@ -26,21 +26,23 @@ class Giphy:
         self.api_key = api_key
         self.loop = loop or asyncio.get_event_loop()
         self.session = session or aiohttp.ClientSession(loop=self.loop)
+        self.params = {
+            'api_key': self.api_key,
+            'q': None
+        }
 
-    async def _get(self, api_endpoint, params):
+    async def _get(self, api_endpoint, **kwargs):
         """
         Wrapper for fetching data from Giphy
         :param api_endpoint: Giphy API endpoint, usually search or translate.
         """
-        params.update({'api_key': self.api_key})
+
         req_str = API_URL + api_endpoint
-        logger.debug(f'Request URL:{api_endpoint}')
-        async with self.session.get(url=req_str, params=params) as resp:
-            logger.debug(f'Making Request to Giphy API with:{params}')
+        async with self.session.get(url=req_str, params=self.params) as resp:
             data = await resp.json()
         return data
 
-    async def search(self, q, limit=None, offset=None, rating=None, lang=None):
+    async def search(self, q, **kwargs):
         """
         Main search method for Giphy's search endpoint
         :param q: search term, Required
@@ -49,43 +51,40 @@ class Giphy:
         :param rating: search result age rating (Y, G, PG, PG-13, R)
         :param lang: language, default=en
         """
-        params = {'q': q}
-        if limit:
-            params.update({'limit': limit})
-        if rating:
-            params.update({'rating': rating})
-        if offset:
-            params.update({'offset': offset})
-        if lang:
-            params.update({'lang': lang})
 
-        data = await self._get('search', params=params)
+        if kwargs:
+            self.params.update(**kwargs)
+
+        self.params['q'] = q
+        data = await self._get('search', params=self.params)
         if data['meta']['status'] is not 200:
             raise GiphyPyError(str(data['meta']['msg']))
+
         return data
 
-    async def translate(self, s, limit=None, offset=None,
-                        rating=None, lang=None):
+    async def translate(self, s):
         """
-        Search method for Giphy's translate endpoint
-        :param q: search term, or phrase, Required
-        :param limit: search result limit, not Required
-        :param offset: search result offset
-        :param rating: search result age rating (Y, G, PG, PG-13, R)
-        :param lang: language, default=en
+        :param s: Search term, Required
+        :return: dict object
         """
-        params = {'s': s}
-        if limit:
-            params.update({'limit': limit})
-        if rating:
-            params.update({'rating': rating})
-        if offset:
-            params.update({'offset': offset})
-        if lang:
-            params.update({'lang': lang})
+        self.params.pop('q')
+        self.params['s'] = s
 
-        data = await self._get('translate', params=params)
+        data = await self._get('translate', params=self.params)
         logger.debug(f'Returned: {data["meta"]["status"]}')
+
         if data['meta']['status'] is not 200:
             raise GiphyPyError(str(data['meta']['msg']))
         return data
+
+    async def gif_links(self, q, **kwargs):
+        """
+        :param q: Search by query.
+        :param kwargs: limit/offset/rating/lang
+        :return: an array with gif links
+        """
+        data = await self.search(q, **kwargs)
+        links = []
+        for gif in data['data']:
+            links.append(gif['url'])
+        return links
