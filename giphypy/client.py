@@ -1,8 +1,8 @@
 import asyncio
+import logging
 from typing import Optional
 
 import aiohttp
-import logging
 
 from .constants import API_URL
 from .errors import GiphyPyError, GiphyPyKeyError
