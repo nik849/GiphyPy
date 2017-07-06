@@ -31,7 +31,7 @@ class Giphy:
             'q': None
         }
 
-    async def _get(self, api_endpoint, **kwargs):
+    async def _get(self, api_endpoint: str, **kwargs):
         """
         Wrapper for fetching data from Giphy
         :param api_endpoint: Giphy API endpoint, usually search or translate.
@@ -62,7 +62,7 @@ class Giphy:
 
         return data
 
-    async def translate(self, s):
+    async def translate(self, s: str):
         """
         :param s: Search term, Required
         :return: dict object
@@ -77,7 +77,7 @@ class Giphy:
             raise GiphyPyError(str(data['meta']['msg']))
         return data
 
-    async def gif_links(self, q, **kwargs):
+    async def gif_links(self, q: str, **kwargs):
         """
         :param q: Search by query.
         :param kwargs: limit/offset/rating/lang
