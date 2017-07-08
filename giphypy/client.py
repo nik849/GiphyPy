@@ -30,7 +30,7 @@ class Giphy:
             'api_key': self.api_key,
         }
 
-    async def _get(self, api_endpoint: str, **kwargs):
+    async def _get(self, api_endpoint: str, stickers=False, **kwargs):
         """
         Wrapper for fetching data from Giphy
         :param api_endpoint: Giphy API endpoint, usually search or translate.
@@ -88,8 +88,20 @@ class Giphy:
         return links
 
     async def random(self, **kwargs):
+        """
+        :param kwargs: tag/rating/fmt
+        :return: an dict object with data
+        """
         if kwargs:
             self.params.update(**kwargs)
 
         data = await self._get('random', params=self.params)
+        return data
+
+    async def find_by_id(self, gif_id: str):
+        """
+        :param idx: an gif ID
+        :return: dict object with data
+        """
+        data = await self._get(f'{gif_id}', params=self.params)
         return data
