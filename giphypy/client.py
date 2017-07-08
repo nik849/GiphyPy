@@ -30,7 +30,7 @@ class Giphy:
             'api_key': self.api_key,
         }
 
-    async def _get(self, api_endpoint: str, stickers=False, **kwargs):
+    async def _get(self, api_endpoint: str, **kwargs):
         """
         Wrapper for fetching data from Giphy
         :param api_endpoint: Giphy API endpoint, usually search or translate.
