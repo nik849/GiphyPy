@@ -1,5 +1,5 @@
-from setuptools import setup # noqa
 import giphypy
+from setuptools import setup  # noqa
 
 version = giphypy.__version__
 
