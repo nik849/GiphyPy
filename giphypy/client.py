@@ -4,7 +4,7 @@ from typing import Optional
 
 import aiohttp
 
-from .constants import API_URL
+from .constants import API_URL, STICKERS_URL
 from .errors import GiphyPyError, GiphyPyKeyError
 
 logger = logging.getLogger(__name__)
@@ -15,8 +15,10 @@ class Giphy:
     Wrapper for the Giphy api. Keys can be optained from:
     https://developers.giphy.com
     """
-    def __init__(self, api_key, loop: Optional[asyncio.BaseEventLoop] = None,
-                 session: aiohttp.ClientSession = None):
+    def __init__(self, api_key,
+                 loop: Optional[asyncio.BaseEventLoop] = None,
+                 session: aiohttp.ClientSession = None,
+                 stickers=False):
         """
         :param api_key: Giphy API key, required.
         """
@@ -29,6 +31,7 @@ class Giphy:
         self.params = {
             'api_key': self.api_key,
         }
+        self.stickers = stickers
 
     async def _get(self, api_endpoint: str, **kwargs):
         """
@@ -36,6 +39,9 @@ class Giphy:
         :param api_endpoint: Giphy API endpoint, usually search or translate.
         """
         req_str = API_URL + api_endpoint
+        if self.stickers:
+            req_str = STICKERS_URL + api_endpoint
+        print(req_str)
         async with self.session.get(url=req_str, params=self.params) as resp:
             data = await resp.json()
         return data
@@ -104,4 +110,12 @@ class Giphy:
         :return: dict object with data
         """
         data = await self._get(f'{gif_id}', params=self.params)
+        return data
+
+    async def stickers_search(self, query: str, **kwargs):
+        self.params['q'] = query
+        if kwargs:
+            self.params.update(**kwargs)
+
+        data = await self._get('search', params=self.params)
         return data
