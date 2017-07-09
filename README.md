@@ -1,7 +1,5 @@
 # GiphyPy
-Python Wrapper for Giphy API
-
-Work in Progress...
+ Async Python 3.6+ wrapper for Giphy API
 
 Installation
 =================================

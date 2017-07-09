@@ -1,5 +1,6 @@
 import giphypy
-from setuptools import setup  # noqa
+from setuptools import setup
+
 
 version = giphypy.__version__
 
@@ -12,6 +13,7 @@ setup_kwargs = {
     'author_email': 'freshjelly12@yahoo.com',
     'description': 'Python Wrapper for Giphy API',
     'packages': ['giphypy'],
+    'install_requires': ['aiohttp', 'requests'],
     'classifiers': [
         'Development Status :: 1 - Planning',
         'Environment :: Web Environment',
@@ -19,3 +21,5 @@ setup_kwargs = {
         'License :: OSI Approved :: MIT License'
     ],
  }
+
+setup(**setup_kwargs)
