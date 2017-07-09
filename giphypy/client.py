@@ -1,13 +1,18 @@
 import asyncio
-import logging
 from typing import Optional
 
 import aiohttp
 
 from .constants import API_URL, STICKERS_URL
 from .errors import GiphyPyError, GiphyPyKeyError
+from .utils import output_links
 
-logger = logging.getLogger(__name__)
+
+"""
+We added all endpoints
+for now we need just to refactor
+or improve the class.
+"""
 
 
 class Giphy:
@@ -41,7 +46,6 @@ class Giphy:
         req_str = API_URL + api_endpoint
         if self.stickers:
             req_str = STICKERS_URL + api_endpoint
-        print(req_str)
         async with self.session.get(url=req_str, params=self.params) as resp:
             data = await resp.json()
         return data
@@ -71,11 +75,9 @@ class Giphy:
         :param s: Search term, Required
         :return: dict object
         """
-        self.params.pop('q')
         self.params['s'] = s
 
         data = await self._get('translate', params=self.params)
-        logger.debug(f'Returned: {data["meta"]["status"]}')
 
         if data['meta']['status'] is not 200:
             raise GiphyPyError(str(data['meta']['msg']))
@@ -88,10 +90,7 @@ class Giphy:
         :return: an array with gif links
         """
         data = await self.search(query, **kwargs)
-        links = []
-        for gif in data['data']:
-            links.append(gif['url'])
-        return links
+        return output_links(data)
 
     async def random(self, **kwargs):
         """
@@ -106,16 +105,50 @@ class Giphy:
 
     async def find_by_id(self, gif_id: str):
         """
-        :param idx: an gif ID
+        :param gif_id: an gif ID
         :return: dict object with data
         """
         data = await self._get(f'{gif_id}', params=self.params)
         return data
 
     async def stickers_search(self, query: str, **kwargs):
+        """
+        :param query: Find by query
+        :param kwargs: title/limit/offset/rating/lang/fmt
+        :return: an dict object with data
+        """
         self.params['q'] = query
         if kwargs:
             self.params.update(**kwargs)
 
         data = await self._get('search', params=self.params)
+        return data
+
+    async def stickers_trending(self, **kwargs):
+        """
+        :param kwargs:
+        :return:
+        """
+        if kwargs:
+            self.params.update(**kwargs)
+        data = await self._get('trending', params=self.params)
+        return data
+
+    async def stickers_links(self, query: str, **kwargs):
+        """
+        :param query: Find by query
+        :param kwargs: title/limit/offset/rating/lang/fmt
+        :return: an dict object with data
+        """
+        data = await self.stickers_search(query, **kwargs)
+        return output_links(data)
+
+    async def stickers_translate(self, s: str):
+        data = await self.translate(s)
+        return data
+
+    async def stickers_random(self, **kwargs):
+        if kwargs:
+            self.params.update(**kwargs)
+        data = await self.random(params=self.params)
         return data
