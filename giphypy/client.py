@@ -8,13 +8,6 @@ from .errors import GiphyPyError, GiphyPyKeyError
 from .utils import output_links
 
 
-"""
-We added all endpoints
-for now we need just to refactor
-or improve the class.
-"""
-
-
 class Giphy:
     """
     Wrapper for the Giphy api. Keys can be optained from:
@@ -48,6 +41,7 @@ class Giphy:
             req_str = STICKERS_URL + api_endpoint
         async with self.session.get(url=req_str, params=self.params) as resp:
             data = await resp.json()
+            self.session.close()
         return data
 
     async def search(self, query: str, **kwargs):
@@ -144,10 +138,18 @@ class Giphy:
         return output_links(data)
 
     async def stickers_translate(self, s: str):
+        """
+        :param s: string for example 'ryan hosling'
+        :return: an object with data
+        """
         data = await self.translate(s)
         return data
 
     async def stickers_random(self, **kwargs):
+        """
+        :param kwargs: tag/rating/fmt
+        :return: an object with data
+        """
         if kwargs:
             self.params.update(**kwargs)
         data = await self.random(params=self.params)
