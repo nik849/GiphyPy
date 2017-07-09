@@ -8,6 +8,8 @@ Usage
 =================================
 ```python
 from giphypy.client import Giphy
+import asyncio
+
 loop = asyncio.get_event_loop()
 
 # Create an instance of giphy class.
