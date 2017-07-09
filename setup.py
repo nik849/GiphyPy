@@ -14,6 +14,7 @@ setup_kwargs = {
     'description': 'Python Wrapper for Giphy API',
     'packages': ['giphypy'],
     'install_requires': ['aiohttp', 'requests'],
+    'keywords': ['web', 'api', 'giphy', 'wrapper'],
     'classifiers': [
         'Development Status :: 1 - Planning',
         'Environment :: Web Environment',
