@@ -41,6 +41,7 @@ class Giphy:
             req_str = STICKERS_URL + api_endpoint
         async with self.session.get(url=req_str, params=self.params) as resp:
             data = await resp.json()
+            self.session.close()
         return data
 
     async def search(self, query: str, **kwargs):
