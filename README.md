@@ -1,8 +1,13 @@
 # GiphyPy
  Async Python 3.6+ wrapper for Giphy API
 
+ [![Build Status]( https://travis-ci.org/The-PyWaiters/GiphyPy.svg?branch=master)](https://travis-ci.org/The-PyWaiters/GiphyPy)
+
 Installation
 =================================
+    1. Clone the repository
+    2. `pip install -r requirements.txt`
+    3. `python setup.py install`
 
 Usage
 =================================
@@ -31,14 +36,13 @@ loop.run_until_complete(main())
         * gif_links
         * random
         * find_by_id
+        * trending
         * stickers_search
         * stickers_trending
         * stickers_links
         * stickers_translate
         * stickers_random
 
-Examples
-=================================
 
 Contribution
 =================================

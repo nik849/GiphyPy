@@ -105,6 +105,16 @@ class Giphy:
         data = await self._get(f'{gif_id}', params=self.params)
         return data
 
+    async def trending(self, **kwargs):
+        """
+        :param kwargs: rating/search limit
+        :return: List of top trending gifs
+        """
+        if kwargs:
+            self.params.update(**kwargs)
+        data = await self._get('trending', params=self.params)
+        return data
+
     async def stickers_search(self, query: str, **kwargs):
         """
         :param query: Find by query
