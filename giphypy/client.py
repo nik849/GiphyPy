@@ -108,7 +108,7 @@ class Giphy:
     async def trending(self, **kwargs):
         """
         :param kwargs: rating/search limit
-        :return: List of top trending gifs    
+        :return: List of top trending gifs
         """
         if kwargs:
             self.params.update(**kwargs)
