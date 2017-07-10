@@ -13,3 +13,4 @@ urllib3==1.21.1
 yarl==0.11.0
 isort
 tox
+sphinx
