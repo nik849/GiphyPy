@@ -6,7 +6,7 @@
 GiphyPy
 ===================================
 
-v0.0.3 (`Github`_)
+v0.0.1 (`Github`_)
 
 GiphyPy is a Python wrapper for the Giphy API, using asyncio.
 For Python 3.6x.
