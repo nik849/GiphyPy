@@ -2,9 +2,6 @@ import giphypy
 import sys
 from setuptools import setup
 
-if sys.version_info < (3, 5):
-    sys.stderr.write('GiphyPy requires at least Python 3.5\n')
-    sys.exit(1)
 
 version = giphypy.__version__
 
@@ -26,5 +23,17 @@ setup_kwargs = {
         'License :: OSI Approved :: MIT License'
     ],
  }
+
+if sys.version_info < (3, 5):
+    """
+    If python version is less than 2.5, exit else proceed
+    """
+    print('\n\033[91m[Error]\033[0m: '
+          'giphypy requires Python version >= 3.5.\n\t '
+          'You are currently using Python {}\n\t '
+          'Exiting...\n'
+          .format(sys.version.split('(')[0].strip()))
+
+    sys.exit()
 
 setup(**setup_kwargs)
