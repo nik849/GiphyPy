@@ -1,6 +1,10 @@
 import giphypy
+import sys
 from setuptools import setup
 
+if sys.version_info < (3, 5):
+    sys.stderr.write('GiphyPy requires at least Python 3.5\n')
+    sys.exit(1)
 
 version = giphypy.__version__
 
