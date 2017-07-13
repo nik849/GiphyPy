@@ -19,6 +19,7 @@
 #
 import os
 import sys
+
 import giphypy
 
 sys.path.insert(0, os.path.abspath('.'))
